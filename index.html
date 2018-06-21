@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>TodoList</title>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
+    <link rel="stylesheet" href="bootstrap.css">  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous"><link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/1.0.26/vue.js"></script>
+</head>
+
+<body>
+<div id="app" class="container">
+    <div class="App">
+        <h1>Get Things Done</h1>  
+        <input type="text" id="name" class="formField addTask" v-model="newTask.name" placeholder=""  />
+        <button v-if='updateTask()' class="todoBtn" id="update" @click.prevent="update()" />Save</button>
+        <button v-else id="add" class="todoBtn" @click.prevent="add()" />Add</button>
+        <div id="example-2" class="">
+          <li v-for='task in tasks' class="task-list myList">
+             {{ task.name }}
+             <div class="icon-buttons">
+                 <button class="listBtn" @click.prevent = 'edit(task, $index)'><i class="far fa-edit"></i></a>
+                 <button class="listBtn" @click.prevent = 'remove(task, $index)'><i class="far fa-trash-alt"></i></a>
+            </div>
+         </li>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+new Vue({
+    el: '#app',
+    data: {
+        tasks: [     
+        ],
+        newTask: {name : ''},
+        editIndex : ''
+    },
+    methods: {
+        remove: function(task, index){
+            this.tasks.$remove(task)
+            if(this.editIndex == index){
+                this.editIndex = ''
+                this.newTask = {
+                    name : ''
+                }
+            }
+        },
+        updateTask: function(){
+            return this.editIndex !== ''
+        },
+        edit: function(task, index){
+            this.newTask.name = task.name
+            this.editIndex = index
+        },
+        pushTask: function(task){
+            return task.name != '' 
+        },
+        update: function(){
+            var newTask = this.newTask
+            if(this.pushTask(newTask)){
+                this.newTask = {
+                    name : ''
+                }
+                this.tasks.$set(this.editIndex, newTask)
+                this.editIndex = ''
+            }
+        },
+        add: function(){
+            var newTask = this.newTask
+            if(this.pushTask(newTask)){
+                this.tasks.push(newTask)
+                this.newTask = {
+                    name : ''
+                }
+            }
+        }
+    }
+})
+</script>
+</body>
+</html>
